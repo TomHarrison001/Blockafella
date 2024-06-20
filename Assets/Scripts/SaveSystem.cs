@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SavePlayer(PlayerController controller)
+    public static void SavePlayer(GameController controller)
     {
         BinaryFormatter formatter = new();
         string path = Application.persistentDataPath + "/blockSave.txt";

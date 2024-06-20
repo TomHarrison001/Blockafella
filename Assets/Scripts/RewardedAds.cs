@@ -67,7 +67,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
         {
             Debug.Log("Unity Ads Rewarded Ad Completed");
             // Grant a reward.
-            controller.Reward = true;
+            controller.Reward();
             // Load another ad:
             LoadAd();
         }

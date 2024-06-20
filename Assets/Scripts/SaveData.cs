@@ -5,9 +5,9 @@ public class SaveData
     public int coins;
     public int skin;
 
-    public int[] skinsUnlocked;
+    public bool[] skinsUnlocked;
 
-    public SaveData(PlayerController controller)
+    public SaveData(GameController controller)
     {
         highscore = controller.Highscore;
         coins = controller.Coins;

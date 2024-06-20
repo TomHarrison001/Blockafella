@@ -6,12 +6,21 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance;
 
+    // Game Settings
     private CanvasGroup sceneFade;
     private float musicVolume, sfxVolume;
     private bool vibrate = true;
     public float MusicVolume { get { return musicVolume; } set { musicVolume = value; SaveData(); } }
     public float SfxVolume { get { return sfxVolume; } set { sfxVolume = value; SaveData(); } }
     public bool Vibrate { get { return vibrate; } set { vibrate = value; SaveData(); } }
+
+    // Player Save Data
+    private int highscore, coins, skin;
+    private bool[] skinsUnlocked;
+    public int Highscore { get { return highscore; } set { highscore = value; } }
+    public int Coins { get { return coins; } set { coins = value; } }
+    public int Skin { get { return skin; } set { skin = value; } }
+    public bool[] SkinsUnlocked { get { return skinsUnlocked; } set { skinsUnlocked = value; } }
 
     private void Awake()
     {
@@ -23,8 +32,17 @@ public class GameController : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        Reset();
         LoadData();
         StartCoroutine(SceneFadeOut());
+    }
+
+    private void Reset()
+    {
+        highscore = 0;
+        coins = 0;
+        skin = 0;
+        skinsUnlocked = new bool[] { false, false, false, false, false, false };
     }
 
     private void LoadData()
@@ -32,14 +50,23 @@ public class GameController : MonoBehaviour
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         sfxVolume = PlayerPrefs.GetFloat("SfxVolume", 1f);
         vibrate = PlayerPrefs.GetFloat("Vibrate", 1f) == 1f;
+
+        SaveData save = SaveSystem.LoadPlayer();
+        if (save == null) return;
+        highscore = save.highscore;
+        coins = save.coins;
+        skin = save.skin;
+        skinsUnlocked = save.skinsUnlocked;
     }
 
-    private void SaveData()
+    public void SaveData()
     {
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         PlayerPrefs.SetFloat("SfxVolume", sfxVolume);
         PlayerPrefs.SetFloat("Vibrate", vibrate ? 1f : 0f);
         PlayerPrefs.Save();
+
+        SaveSystem.SavePlayer(this);
     }
 
     private IEnumerator SceneFadeIn()
@@ -76,6 +103,7 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Quitting...");
         StartCoroutine(SceneFadeIn());
+        SaveData();
         yield return new WaitForSeconds(0.5f);
         Application.Quit();
     }
