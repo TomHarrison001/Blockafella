@@ -9,10 +9,8 @@ public class GameController : MonoBehaviour
     // Game Settings
     private CanvasGroup sceneFade;
     private float musicVolume, sfxVolume;
-    private bool vibrate = true;
     public float MusicVolume { get { return musicVolume; } set { musicVolume = value; SaveData(); } }
     public float SfxVolume { get { return sfxVolume; } set { sfxVolume = value; SaveData(); } }
-    public bool Vibrate { get { return vibrate; } set { vibrate = value; SaveData(); } }
 
     // Player Save Data
     private int highscore, coins, skin;
@@ -49,7 +47,6 @@ public class GameController : MonoBehaviour
     {
         musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         sfxVolume = PlayerPrefs.GetFloat("SfxVolume", 1f);
-        vibrate = PlayerPrefs.GetFloat("Vibrate", 1f) == 1f;
 
         SaveData save = SaveSystem.LoadPlayer();
         if (save == null) return;
@@ -63,7 +60,6 @@ public class GameController : MonoBehaviour
     {
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         PlayerPrefs.SetFloat("SfxVolume", sfxVolume);
-        PlayerPrefs.SetFloat("Vibrate", vibrate ? 1f : 0f);
         PlayerPrefs.Save();
 
         SaveSystem.SavePlayer(this);

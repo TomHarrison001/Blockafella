@@ -37,7 +37,6 @@ public class MainMenu : MonoBehaviour
     {
         musicSlider.value = controller.MusicVolume;
         sfxSlider.value = controller.SfxVolume;
-        vToggle.isOn = controller.Vibrate;
     }
 
     private void UpdateShop()
@@ -68,15 +67,9 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void ToggleChange(Toggle t)
-    {
-        controller.Vibrate = t.isOn;
-    }
-
     public void PlayButtonAudio()
     {
         audioManager.Play("select");
-        if (controller.Vibrate) Vibration.Vibrate(30);
     }
 
     public void LoadGame()

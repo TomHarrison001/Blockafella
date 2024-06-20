@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText, movesText, gameOverScore;
-    [SerializeField] private GameObject cam, directions, adBtn;
+    [SerializeField] private GameObject cam;
     [SerializeField] private ActivateMenu gameOverMenu;
     private AudioManager audioManager;
     private GameController controller;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer rend;
     private int score, moves, dir, newMove, newDash;
     private float speed = 1.2f;
-    private bool moving, dashing, reward;
+    private bool moving, dashing;
 
     private void Start()
     {
@@ -27,18 +27,24 @@ public class PlayerController : MonoBehaviour
         Restart();
     }
 
+    private void Update()
+    {
+        if (Input.GetKey("w") || Input.GetKey("up")) Move(0);
+        else if (Input.GetKey("s") || Input.GetKey("down")) Move(1);
+        else if (Input.GetKey("a") || Input.GetKey("left")) Move(2);
+        else if (Input.GetKey("d") || Input.GetKey("right")) Move(3);
+    }
+
     private void Restart()
     {
         score = 0;
         scoreText.text = "Score: " + score;
         moves = 10;
         movesText.text = "Moves: " + moves;
-        reward = false;
         transform.position = new Vector3(0, 4.8f, 0);
         SelectColour();
         cam.transform.position = new Vector3(0, 0, -1f);
         levelGen.GenerateNewLevel();
-        StartCoroutine(Directions());
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -150,31 +156,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Reward()
-    {
-        reward = true;
-        adBtn.SetActive(!reward);
-        gameOverMenu.DisableMenu();
-        moves = 5;
-        movesText.text = "Moves: " + moves;
-    }
-
     public void PlayButtonAudio()
     {
         audioManager.Play("select");
-        if (controller.Vibrate) Vibration.Vibrate(30);
     }
 
     public void LoadMainMenu()
     {
         controller.LoadLevel(0);
-    }
-
-    private IEnumerator Directions()
-    {
-        GameObject g = Instantiate(directions, Vector2.zero, Quaternion.identity);
-        yield return new WaitForSeconds(1f);
-        Destroy(g);
     }
 
     private IEnumerator EndGame()
